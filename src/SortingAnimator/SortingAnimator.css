@@ -1,0 +1,23 @@
+.array-container{
+    background-color: rgb(168, 250, 246);
+    position: absolute;
+    height: 650px;
+}
+
+.array-bar{
+    margin: 15px 4px;
+    width: 5px;
+    background-color: rgb(38, 0, 255);
+    display: inline-block;
+}
+
+.header-button{
+    position: relative;
+    background-color: rgb(251, 255, 0);
+    width: 150px;
+    height: 80px;
+    font-size: large;
+    margin-top: 20px;
+
+    
+}
