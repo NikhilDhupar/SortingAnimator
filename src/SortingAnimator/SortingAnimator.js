@@ -8,7 +8,9 @@ export default class SortingAnimator extends Component {
         super(props);
         this.state = {
             array: [],
+            sorting_in_progress: false,
         };
+        this.complete = this.complete.bind(this);
     }
 
     componentDidMount() {
@@ -16,11 +18,21 @@ export default class SortingAnimator extends Component {
     }
 
     reset() {
+        if(this.state.sorting_in_progress)
+        {
+            alert("Sorting in Progress");
+            return;
+        }
         const array = [];
         for (let i = 0; i < 100; i++) {
             array.push(randomIntFromInterval(10, 500));
         }
         this.setState({ array });
+    }
+
+    complete()
+    {
+        this.setState({sorting_in_progress: false});
     }
 
     bubbleSort() {
@@ -29,7 +41,7 @@ export default class SortingAnimator extends Component {
         var SPEED_MS = 5;
         const arrayBars = document.getElementsByClassName('array-bar');
         var i = 0, j = 0;
-        function animatebubblesort(i, j, length, arrayBars) {
+        function animatebubblesort(i, j, length, arrayBars,callback) {
             if (j < length - i - 1 && i < length - 1) {
                 if (array[j] > array[j + 1]) {
                     let temp = array[j];
@@ -44,22 +56,30 @@ export default class SortingAnimator extends Component {
                     setTimeout(() => {
                         bar1.backgroundColor = "blue";
                         bar2.backgroundColor = "blue";
-                        animatebubblesort(i, j + 1, length, arrayBars);
+                        animatebubblesort(i, j + 1, length, arrayBars,callback);
                     }, SPEED_MS);
                 }
                 else
-                    animatebubblesort(i, j + 1, length, arrayBars);
+                    animatebubblesort(i, j + 1, length, arrayBars,callback);
             }
             else if (j === length - i - 1 && i < length - 1) {
                 j = 0; i++;
-                animatebubblesort(i, j, length, arrayBars);
+                animatebubblesort(i, j, length, arrayBars, callback);
             }
-            // else if (i >= length - 1) {
-            //   sortingCompleted(length, arrayBars);
-            // }
+            else  {
+              callback();
+            }
         }
-        animatebubblesort(i, j, length, arrayBars);
-
+        
+        if( this.state.sorting_in_progress )
+        {
+            alert("Sorting in progress");
+        }
+        else
+        {
+            this.setState({ sorting_in_progress: true });
+            animatebubblesort(i, j, length, arrayBars, this.complete);
+        }
     }
 
     render() {
