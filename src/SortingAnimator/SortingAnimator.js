@@ -98,17 +98,6 @@ export default class SortingAnimator extends Component {
         }
         let { SPEED_MS, array } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
-        /*
-        sorting algorithm in c
-        for (i = 1; i < length; i++) {
-            key = array[i];
-            j = i - 1;
-            while (j >= 0 && array[j] > key) {
-                array[j + 1] = array[j];
-                j = j - 1;
-            }
-            array[j + 1] = key;
-        }*/
         function animateinsertionsort(i, j, key, arrayBars, callback) {
             // console.log(`j is ${j} and i is ${i} - ` + array[j] + " " + array[j+1]);
             if (i >= arrayBars.length) {
@@ -198,14 +187,17 @@ export default class SortingAnimator extends Component {
         const { array } = this.state;
         return (
             <div className="array-container">
-
-                {array.map((value, index) => (
-                    <div className="array-bar" key={index} style={{ height: `${value}px`, backgroundColor: 'blue' }}></div>
-                ))}
-                <button className="header-button" onClick={() => this.reset()}>New Array</button>
-                <button className="header-button" onClick={() => this.bubbleSort()}>Bubble Sort</button>
-                <button className="header-button" onClick={() => this.insertionSort()}>Insertion Sort</button>
-                <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
+                <div className="button-container">
+                    <button className="header-button" onClick={() => this.reset()}>New Array</button>
+                    <button className="header-button" onClick={() => this.bubbleSort()}>Bubble Sort</button>
+                    <button className="header-button" onClick={() => this.insertionSort()}>Insertion Sort</button>
+                    <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
+                </div>
+                <div className="graph-container">
+                    {array.map((value, index) => (
+                        <div className="array-bar" key={index} style={{ height: `${value}px`, backgroundColor: 'blue' }}></div>
+                    ))}
+                </div>
             </div>
 
         );

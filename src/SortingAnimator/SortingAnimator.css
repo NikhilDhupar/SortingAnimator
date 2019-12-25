@@ -1,7 +1,8 @@
 .array-container{
     background-color: rgb(168, 250, 246);
     position: absolute;
-    height: 650px;
+    height: 100%;
+    width: 100%;
 }
 
 .array-bar{
@@ -15,9 +16,12 @@
     position: relative;
     background-color: rgb(251, 255, 0);
     width: 150px;
-    height: 80px;
+    height: 60px;
     font-size: large;
-    margin-top: 20px;
+    margin: 5px 10px;
+}
 
-    
+.button-container{
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
