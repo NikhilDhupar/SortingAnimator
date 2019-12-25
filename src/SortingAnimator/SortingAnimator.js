@@ -9,7 +9,7 @@ export default class SortingAnimator extends Component {
         this.state = {
             array: [],
             sorting_in_progress: false,
-            SPEED_MS: 10,
+            SPEED_MS: 5,
         };
         this.complete = this.complete.bind(this);
     }
@@ -31,10 +31,16 @@ export default class SortingAnimator extends Component {
     }
 
     complete() {
-        this.setState({ sorting_in_progress: false });
+        this.setState({
+            sorting_in_progress: false,
+        });
     }
 
     bubbleSort() {
+        if (this.state.sorting_in_progress) {
+            alert("Sorting in progress");
+            return;
+        }
         let { array } = this.state;
         let length = array.length;
         let { SPEED_MS } = this.state;
@@ -70,13 +76,9 @@ export default class SortingAnimator extends Component {
             }
         }
 
-        if (this.state.sorting_in_progress) {
-            alert("Sorting in progress");
-        }
-        else {
-            this.setState({ sorting_in_progress: true });
-            animatebubblesort(i, j, length, arrayBars, this.complete);
-        }
+        this.setState({ sorting_in_progress: true });
+        animatebubblesort(i, j, length, arrayBars, this.complete);
+
     }
 
     insertionSort() {
@@ -128,8 +130,55 @@ export default class SortingAnimator extends Component {
         }
 
         this.setState({ sorting_in_progress: true });
-        
+
         animateinsertionsort(1, 0, array[1], arrayBars, this.complete);
+    }
+
+    selectionSort() {
+        if (this.state.sorting_in_progress) {
+            alert("Sorting in progress");
+            return;
+        }
+        let { SPEED_MS, array } = this.state;
+        const arrayBars = document.getElementsByClassName('array-bar');
+
+        function animateselectionsort(i, j, minindex, arrayBars, callback) {
+            if (i >= arrayBars.length - 1) {
+                callback();
+                return;
+            }
+            else {
+                //arrayBars[i].style.backgroundColor = "red";
+                if (j <= arrayBars.length - 1) {
+                    arrayBars[j].style.backgroundColor = "red";
+                    arrayBars[i].style.backgroundColor = "red";
+                    if (array[j] < array[minindex])
+                        minindex = j;
+                    setTimeout(() => {
+                        arrayBars[j].style.backgroundColor = "blue";
+                        arrayBars[i].style.backgroundColor = "blue";
+                        animateselectionsort(i, j + 1, minindex, arrayBars, callback);
+                    }, SPEED_MS);
+                }
+                else {
+                    let temp = array[i];
+                    array[i] = array[minindex];
+                    array[minindex] = temp;
+                    arrayBars[i].style.height = `${array[i]}px`;
+                    arrayBars[minindex].style.height = `${array[minindex]}px`;
+                    arrayBars[minindex].style.backgroundColor = "red";
+                    arrayBars[i].style.backgroundColor = "red";
+                    setTimeout(() => {
+                        arrayBars[i].style.backgroundColor = "blue";
+                        arrayBars[minindex].style.backgroundColor = "blue";
+                        animateselectionsort(i + 1, i + 2, i + 1, arrayBars, callback);
+                    }, SPEED_MS);
+                }
+            }
+        }
+
+        this.setState({ sorting_in_progress: true });
+        animateselectionsort(0, 1, 0, arrayBars, this.complete);
     }
 
     render() {
@@ -143,6 +192,7 @@ export default class SortingAnimator extends Component {
                 <button className="header-button" onClick={() => this.reset()}>New Array</button>
                 <button className="header-button" onClick={() => this.bubbleSort()}>Bubble Sort</button>
                 <button className="header-button" onClick={() => this.insertionSort()}>Insertion Sort</button>
+                <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
             </div>
 
         );
