@@ -10,6 +10,7 @@ export default class SortingAnimator extends Component {
             array: [],
             sorting_in_progress: false,
             SPEED_MS: 5,
+            array_sorted: true,
         };
         this.complete = this.complete.bind(this);
     }
@@ -27,18 +28,23 @@ export default class SortingAnimator extends Component {
         for (let i = 0; i < 100; i++) {
             array.push(randomIntFromInterval(10, 500));
         }
-        this.setState({ array });
+        this.setState({ array, array_sorted: false });
     }
 
     complete() {
         this.setState({
             sorting_in_progress: false,
+            array_sorted: true
         });
     }
 
     bubbleSort() {
         if (this.state.sorting_in_progress) {
             alert("Sorting in progress");
+            return;
+        }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
             return;
         }
         let { array } = this.state;
@@ -84,6 +90,10 @@ export default class SortingAnimator extends Component {
     insertionSort() {
         if (this.state.sorting_in_progress) {
             alert("Sorting in progress");
+            return;
+        }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
             return;
         }
         let { SPEED_MS, array } = this.state;
@@ -139,6 +149,10 @@ export default class SortingAnimator extends Component {
             alert("Sorting in progress");
             return;
         }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
+            return;
+        }
         let { SPEED_MS, array } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
 
@@ -148,7 +162,6 @@ export default class SortingAnimator extends Component {
                 return;
             }
             else {
-                //arrayBars[i].style.backgroundColor = "red";
                 if (j <= arrayBars.length - 1) {
                     arrayBars[j].style.backgroundColor = "red";
                     arrayBars[i].style.backgroundColor = "red";
