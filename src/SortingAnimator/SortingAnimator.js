@@ -9,7 +9,7 @@ export default class SortingAnimator extends Component {
         this.state = {
             array: [],
             sorting_in_progress: false,
-            SPEED_MS: 5,
+            SPEED_MS: 50,
             array_sorted: true,
         };
         this.complete = this.complete.bind(this);
@@ -183,6 +183,130 @@ export default class SortingAnimator extends Component {
         animateselectionsort(0, 1, 0, arrayBars, this.complete);
     }
 
+    mergeSort()
+    {
+        if (this.state.sorting_in_progress) {
+            alert("Sorting in progress");
+            return;
+        }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
+            return;
+        }
+        let { SPEED_MS, array } = this.state;
+        const arrayBars = document.getElementsByClassName('array-bar');
+        let temp = [];
+        for(let x =0;x<array.length;x++)
+        {
+            temp.push(array[x]);
+        }
+
+        function mergesort(l,r,array,arrayBars,callback)
+        {
+            if(l<r)
+            {
+                let m = Math.floor((l+r)/2);
+                //setTimeout(()=>{},m*SPEED_MS);
+                //console.log(`left is - ${l} , middle is ${m} , right is - ${r}`);
+                //console.log("left called");
+                mergesort(l,m,array,arrayBars,callback);
+                //console.log("right called");
+                mergesort(m+1,r,array,arrayBars,callback);
+                //console.log("checking if l i s - "+l+" r is - "+r);
+                merge(l,m,r,array,arrayBars,callback);
+                if(r-l === arrayBars.length-1)
+                {
+                    //printarray(array);
+                    callback();
+                    return;
+                }
+            }
+        }
+
+        function merge(l,m,r,array,arrayBars,callback){
+            //console.log("inside merge function");
+            //console.log(`left is - ${l} , middle is ${m} , right is - ${r}`);
+            let comparisons = [];
+            let sortedresult = [];
+            let i,j;
+            i=l;
+            j=m+1;
+            for(let x=l;x<=r;x++)
+            {
+                if(i<=m && j<=r)
+                {
+                    if(array[i]<array[j])
+                    {
+                        comparisons.push(i);
+                        sortedresult.push(array[i]);
+                        i++;
+                    }
+                    else
+                    {
+                        comparisons.push(j);
+                        sortedresult.push(array[j]);
+                        j++;
+                    }
+                }
+                else if(i>m&&j<=r)
+                {
+                    comparisons.push(j);
+                    sortedresult.push(array[j]);
+                    j++;
+                }
+                else if(i<=m&&j>r)
+                {
+                    comparisons.push(i);
+                    sortedresult.push(array[i]);
+                    i++;
+                }
+            }
+            i=l;
+            //console.log("before merge function");
+            //printarray(array);
+            
+            for(let x=0;x<sortedresult.length && i<=r;x++)
+            {
+                array[i]=sortedresult[x];
+                i++;
+            }
+            
+            //console.log("after merge function");
+            //printarray(array);                                                                                                                                                                                                                                                                                                                                                                                                                    
+            animate_merge_comparisons(0,comparisons,arrayBars,l,r,sortedresult);
+            //animate_merge_merging(l,r,0,sortedresult,arrayBars);
+        }
+        
+        function animate_merge_comparisons(current,comparisons,arrayBars,l,r,sortedresult)
+        {
+            if(current>=comparisons.length)
+            {
+                animate_merge_merging(l,r,0,sortedresult,arrayBars);
+                return;
+            }
+            arrayBars[comparisons[current]].style.backgroundColor = "red";
+            setTimeout(()=>{
+                arrayBars[comparisons[current]].style.backgroundColor = "blue";
+                animate_merge_comparisons(current+1,comparisons,arrayBars,l,r,sortedresult);
+            },SPEED_MS);
+        }
+
+        function animate_merge_merging(l,r,current,sortedresult,arrayBars)
+        {
+            if(l>r)
+                return;
+            arrayBars[l].style.backgroundColor = "red";
+            arrayBars[l].style.height = `${sortedresult[current]}px`;
+            setTimeout(()=>{
+                arrayBars[l].style.backgroundColor = "blue";
+                animate_merge_merging(l+1,r,current+1,sortedresult,arrayBars);
+            },SPEED_MS);
+        }
+        
+        this.setState({ sorting_in_progress: true });
+        mergesort(0,array.length-1,temp,arrayBars,this.complete);
+    }
+
     render() {
         const { array } = this.state;
         return (
@@ -192,6 +316,7 @@ export default class SortingAnimator extends Component {
                     <button className="header-button" onClick={() => this.bubbleSort()}>Bubble Sort</button>
                     <button className="header-button" onClick={() => this.insertionSort()}>Insertion Sort</button>
                     <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
+                    <button className="header-button" onClick={() => this.mergeSort()}>Merge Sort</button>
                 </div>
                 <div className="graph-container">
                     {array.map((value, index) => (
