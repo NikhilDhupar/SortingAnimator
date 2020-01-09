@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './SortingAnimator.css';
-import { randomIntFromInterval } from './HelperFunctions';
+import { randomIntFromInterval, mergesort } from './HelperFunctions';
 /*import { render } from '@testing-library/react';*/
 
 export default class SortingAnimator extends Component {
@@ -193,118 +193,16 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { SPEED_MS, array } = this.state;
+        let { array } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
         let temp = [];
+        let resultant_data = [];
         for(let x =0;x<array.length;x++)
         {
             temp.push(array[x]);
         }
-
-        function mergesort(l,r,array,arrayBars,callback)
-        {
-            if(l<r)
-            {
-                let m = Math.floor((l+r)/2);
-                //setTimeout(()=>{},m*SPEED_MS);
-                //console.log(`left is - ${l} , middle is ${m} , right is - ${r}`);
-                //console.log("left called");
-                mergesort(l,m,array,arrayBars,callback);
-                //console.log("right called");
-                mergesort(m+1,r,array,arrayBars,callback);
-                //console.log("checking if l i s - "+l+" r is - "+r);
-                merge(l,m,r,array,arrayBars,callback);
-                if(r-l === arrayBars.length-1)
-                {
-                    //printarray(array);
-                    callback();
-                    return;
-                }
-            }
-        }
-
-        function merge(l,m,r,array,arrayBars,callback){
-            //console.log("inside merge function");
-            //console.log(`left is - ${l} , middle is ${m} , right is - ${r}`);
-            let comparisons = [];
-            let sortedresult = [];
-            let i,j;
-            i=l;
-            j=m+1;
-            for(let x=l;x<=r;x++)
-            {
-                if(i<=m && j<=r)
-                {
-                    if(array[i]<array[j])
-                    {
-                        comparisons.push(i);
-                        sortedresult.push(array[i]);
-                        i++;
-                    }
-                    else
-                    {
-                        comparisons.push(j);
-                        sortedresult.push(array[j]);
-                        j++;
-                    }
-                }
-                else if(i>m&&j<=r)
-                {
-                    comparisons.push(j);
-                    sortedresult.push(array[j]);
-                    j++;
-                }
-                else if(i<=m&&j>r)
-                {
-                    comparisons.push(i);
-                    sortedresult.push(array[i]);
-                    i++;
-                }
-            }
-            i=l;
-            //console.log("before merge function");
-            //printarray(array);
-            
-            for(let x=0;x<sortedresult.length && i<=r;x++)
-            {
-                array[i]=sortedresult[x];
-                i++;
-            }
-            
-            //console.log("after merge function");
-            //printarray(array);                                                                                                                                                                                                                                                                                                                                                                                                                    
-            animate_merge_comparisons(0,comparisons,arrayBars,l,r,sortedresult);
-            //animate_merge_merging(l,r,0,sortedresult,arrayBars);
-        }
-        
-        function animate_merge_comparisons(current,comparisons,arrayBars,l,r,sortedresult)
-        {
-            if(current>=comparisons.length)
-            {
-                animate_merge_merging(l,r,0,sortedresult,arrayBars);
-                return;
-            }
-            arrayBars[comparisons[current]].style.backgroundColor = "red";
-            setTimeout(()=>{
-                arrayBars[comparisons[current]].style.backgroundColor = "blue";
-                animate_merge_comparisons(current+1,comparisons,arrayBars,l,r,sortedresult);
-            },SPEED_MS);
-        }
-
-        function animate_merge_merging(l,r,current,sortedresult,arrayBars)
-        {
-            if(l>r)
-                return;
-            arrayBars[l].style.backgroundColor = "red";
-            arrayBars[l].style.height = `${sortedresult[current]}px`;
-            setTimeout(()=>{
-                arrayBars[l].style.backgroundColor = "blue";
-                animate_merge_merging(l+1,r,current+1,sortedresult,arrayBars);
-            },SPEED_MS);
-        }
-        
         this.setState({ sorting_in_progress: true });
-        mergesort(0,array.length-1,temp,arrayBars,this.complete);
+        mergesort(0,array.length-1,temp,arrayBars,this.complete,resultant_data);
     }
 
     render() {
