@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './SortingAnimator.css';
-import { randomIntFromInterval, mergesort } from './HelperFunctions';
+import { randomIntFromInterval, mergesort, SPEED_MS } from './HelperFunctions';
 /*import { render } from '@testing-library/react';*/
 
 export default class SortingAnimator extends Component {
@@ -49,7 +49,6 @@ export default class SortingAnimator extends Component {
         }
         let { array } = this.state;
         let length = array.length;
-        let { SPEED_MS } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
         var i = 0, j = 0;
         function animatebubblesort(i, j, length, arrayBars, callback) {
@@ -96,10 +95,9 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { SPEED_MS, array } = this.state;
+        let { array } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
         function animateinsertionsort(i, j, key, arrayBars, callback) {
-            // console.log(`j is ${j} and i is ${i} - ` + array[j] + " " + array[j+1]);
             if (i >= arrayBars.length) {
                 callback();
                 return;
@@ -142,7 +140,7 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { SPEED_MS, array } = this.state;
+        let { array } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
 
         function animateselectionsort(i, j, minindex, arrayBars, callback) {

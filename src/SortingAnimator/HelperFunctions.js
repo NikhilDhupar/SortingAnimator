@@ -1,3 +1,4 @@
+var SPEED_MS = 50;
 function randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -15,42 +16,32 @@ function animate_mergesort(res, arrayBars, callback, row, col) {
         return;
     }
     if (row % 2 === 0) {
-        //console.log("comparisons");
+        //comparisons
+
         if (col >= res[row].length) {
             animate_mergesort(res, arrayBars, callback, row + 1, 2);
             return;
         }
-        //j=res[i].length;
-        //for(let k=0;k<j;k++)
-        //{
         const bar = arrayBars[res[row][col]];
         bar.style.backgroundColor = "red";
         setTimeout(() => {
             bar.style.backgroundColor = "blue";
             animate_mergesort(res, arrayBars, callback, row, col + 1);
-            //console.log(arrayBars);
-            //animate_merge_comparisons(current+1,comparisons,arrayBars,l,r,sortedresult);
-        }, 50);
+        }, SPEED_MS);
     }
     else {
-        //console.log("merging");
-        //j=res[i][0];
         if (col >= res[row].length) {
             animate_mergesort(res, arrayBars, callback, row + 1, 0);
             return;
         }
-        //console.log(`i is ${i} x is ${x} value is ${res[i][x]}`);
         let j = res[row][0] + col - 2;
         const bar = arrayBars[j];
         bar.style.backgroundColor = "red";
         bar.style.height = `${res[row][col]}px`;
         setTimeout(() => {
-            // bar.style.height = `${res[i][x]}px`;
             bar.style.backgroundColor = "blue";
             animate_mergesort(res, arrayBars, callback, row, col + 1);
-            //animate_merge_merging(l+1,r,current+1,sortedresult,arrayBars);
-        }, 50);
-        //console.log(res[i]);
+        }, SPEED_MS);
     }
 }
 
@@ -70,9 +61,6 @@ function mergesort(l, r, array, arrayBars, callback, res) {
 function merge(l, m, r, array, arrayBars, res) {
     let comparisons = [];
     let sortedresult = [];
-    // sortedresult.push("S");
-    // sortedresult.push(l);
-    // sortedresult.push(r);
     let i, j;
     i = l;
     j = m + 1;
@@ -111,8 +99,6 @@ function merge(l, m, r, array, arrayBars, res) {
     res.push(comparisons);
     res.push(sortedresult);
 
-    //animate_merge_comparisons(0,comparisons,arrayBars,l,r,sortedresult);
-    //animate_merge_merging(l,r,0,sortedresult,arrayBars);
 }
 
 export {
@@ -120,4 +106,5 @@ export {
     sortingCompleted,
     mergesort,
     merge,
+    SPEED_MS,
 }
