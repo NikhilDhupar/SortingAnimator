@@ -1,4 +1,4 @@
-var SPEED_MS = 50;
+var Speed = 50;
 function randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -10,7 +10,7 @@ function sortingCompleted(length, arrayBars) {
     }
 }
 
-function animate_mergesort(res, arrayBars, callback, row, col) {
+function animate_mergesort(res, arrayBars, callback, row, col, SPEED_MS) {
     if (row >= res.length) {
         callback();
         return;
@@ -19,19 +19,19 @@ function animate_mergesort(res, arrayBars, callback, row, col) {
         //comparisons
 
         if (col >= res[row].length) {
-            animate_mergesort(res, arrayBars, callback, row + 1, 2);
+            animate_mergesort(res, arrayBars, callback, row + 1, 2, SPEED_MS);
             return;
         }
         const bar = arrayBars[res[row][col]];
         bar.style.backgroundColor = "red";
         setTimeout(() => {
             bar.style.backgroundColor = "blue";
-            animate_mergesort(res, arrayBars, callback, row, col + 1);
+            animate_mergesort(res, arrayBars, callback, row, col + 1, SPEED_MS);
         }, SPEED_MS);
     }
     else {
         if (col >= res[row].length) {
-            animate_mergesort(res, arrayBars, callback, row + 1, 0);
+            animate_mergesort(res, arrayBars, callback, row + 1, 0, SPEED_MS);
             return;
         }
         let j = res[row][0] + col - 2;
@@ -40,19 +40,19 @@ function animate_mergesort(res, arrayBars, callback, row, col) {
         bar.style.height = `${res[row][col]}px`;
         setTimeout(() => {
             bar.style.backgroundColor = "blue";
-            animate_mergesort(res, arrayBars, callback, row, col + 1);
+            animate_mergesort(res, arrayBars, callback, row, col + 1, SPEED_MS);
         }, SPEED_MS);
     }
 }
 
-function mergesort(l, r, array, arrayBars, callback, res) {
+function mergesort(l, r, array, arrayBars, callback, res, SPEED_MS) {
     if (l < r) {
         let m = Math.floor((l + r) / 2);
         mergesort(l, m, array, arrayBars, callback, res);
         mergesort(m + 1, r, array, arrayBars, callback, res);
         merge(l, m, r, array, arrayBars, res);
         if (r - l === arrayBars.length - 1) {
-            animate_mergesort(res, arrayBars, callback, 0, 0);
+            animate_mergesort(res, arrayBars, callback, 0, 0, SPEED_MS);
             return;
         }
     }
@@ -101,10 +101,49 @@ function merge(l, m, r, array, arrayBars, res) {
 
 }
 
+let heapify = (array, curr_index, l, arrayBars, SPEED_MS) => {
+    return new Promise(async (resolve, reject) => {
+        let left = (2 * curr_index) + 1;
+        let right = (2 * curr_index) + 2;
+        if (l <= 0)
+            resolve();
+        let largest = curr_index;
+        if ((l > left) && (array[left] > array[largest])) {
+            largest = left;
+        }
+        if ((l > right) && (array[right] > array[largest])) {
+            largest = right;
+        }
+        if (largest !== curr_index && largest < l) {
+            await swap(array, largest, curr_index, arrayBars, SPEED_MS);
+            await heapify(array, largest, l, arrayBars, SPEED_MS);
+        }
+        resolve("done");
+    });
+}
+let swap = (array, left, right, arrayBars, SPEED_MS) => {
+    return new Promise((resolve, reject) => {
+        arrayBars[left].style.backgroundColor = "red";
+        arrayBars[right].style.backgroundColor = "red";
+        let temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+        arrayBars[left].style.height = `${array[left]}px`;
+        arrayBars[right].style.height = `${array[right]}px`;
+        setTimeout(() => {
+            arrayBars[left].style.backgroundColor = "blue";
+            arrayBars[right].style.backgroundColor = "blue";
+            resolve("swapping complete");
+        }, SPEED_MS);
+    })
+}
+
 export {
     randomIntFromInterval,
     sortingCompleted,
     mergesort,
     merge,
-    SPEED_MS,
+    Speed,
+    heapify,
+    swap,
 }
