@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './SortingAnimator.css';
-import { randomIntFromInterval, mergesort, SPEED_MS } from './HelperFunctions';
+import { randomIntFromInterval, mergesort, Speed, heapify, swap } from './HelperFunctions';
 /*import { render } from '@testing-library/react';*/
 
 export default class SortingAnimator extends Component {
@@ -9,7 +9,7 @@ export default class SortingAnimator extends Component {
         this.state = {
             array: [],
             sorting_in_progress: false,
-            SPEED_MS: 50,
+            SPEED_MS: Speed,
             array_sorted: true,
         };
         this.complete = this.complete.bind(this);
@@ -47,7 +47,7 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { array } = this.state;
+        let { array, SPEED_MS } = this.state;
         let length = array.length;
         const arrayBars = document.getElementsByClassName('array-bar');
         var i = 0, j = 0;
@@ -95,7 +95,7 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { array } = this.state;
+        let { array, SPEED_MS } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
         function animateinsertionsort(i, j, key, arrayBars, callback) {
             if (i >= arrayBars.length) {
@@ -140,7 +140,7 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { array } = this.state;
+        let { array, SPEED_MS } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
 
         function animateselectionsort(i, j, minindex, arrayBars, callback) {
@@ -181,8 +181,7 @@ export default class SortingAnimator extends Component {
         animateselectionsort(0, 1, 0, arrayBars, this.complete);
     }
 
-    mergeSort()
-    {
+    mergeSort() {
         if (this.state.sorting_in_progress) {
             alert("Sorting in progress");
             return;
@@ -191,16 +190,38 @@ export default class SortingAnimator extends Component {
             alert("array already sorted !!!");
             return;
         }
-        let { array } = this.state;
+        let { array, SPEED_MS } = this.state;
         const arrayBars = document.getElementsByClassName('array-bar');
         let temp = [];
         let resultant_data = [];
-        for(let x =0;x<array.length;x++)
-        {
+        for (let x = 0; x < array.length; x++) {
             temp.push(array[x]);
         }
         this.setState({ sorting_in_progress: true });
-        mergesort(0,array.length-1,temp,arrayBars,this.complete,resultant_data);
+        mergesort(0, array.length - 1, temp, arrayBars, this.complete, resultant_data, SPEED_MS);
+    }
+
+    async heapSort() {
+        if (this.state.sorting_in_progress) {
+            alert("Sorting in progress");
+            return;
+        }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
+            return;
+        }
+        let { array, SPEED_MS } = this.state;
+        const arrayBars = document.getElementsByClassName('array-bar');
+        this.setState({ sorting_in_progress: true });
+        for (let i = array.length / 2; i >= 0; i--) {
+            await heapify(array, i, array.length, arrayBars, SPEED_MS);
+        }
+        for (let i = array.length - 1; i >= 0; i--) {
+            await swap(array, i, 0, arrayBars, SPEED_MS);
+            await heapify(array, 0, i, arrayBars, SPEED_MS);
+        }
+        this.complete();
+
     }
 
     render() {
@@ -213,6 +234,7 @@ export default class SortingAnimator extends Component {
                     <button className="header-button" onClick={() => this.insertionSort()}>Insertion Sort</button>
                     <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
                     <button className="header-button" onClick={() => this.mergeSort()}>Merge Sort</button>
+                    <button className="header-button" onClick={() => this.heapSort()}>Heap Sort</button>
                 </div>
                 <div className="graph-container">
                     {array.map((value, index) => (
