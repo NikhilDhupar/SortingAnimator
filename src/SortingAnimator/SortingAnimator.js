@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './SortingAnimator.css';
-import { randomIntFromInterval, mergesort, Speed, heapify, swap } from './HelperFunctions';
+import { randomIntFromInterval, mergesort, Speed, heapify, swap, quicksort } from './HelperFunctions';
 /*import { render } from '@testing-library/react';*/
 
 export default class SortingAnimator extends Component {
@@ -224,6 +224,22 @@ export default class SortingAnimator extends Component {
 
     }
 
+    async quickSort(){
+        if (this.state.sorting_in_progress) {
+            alert("Sorting in progress");
+            return;
+        }
+        else if (this.state.array_sorted) {
+            alert("array already sorted !!!");
+            return;
+        }
+        let { array, SPEED_MS } = this.state;
+        const arrayBars = document.getElementsByClassName('array-bar');
+        this.setState({ sorting_in_progress: true });
+        await quicksort(array,0,array.length-1,arrayBars,SPEED_MS);
+        this.complete();
+    }
+
     render() {
         const { array } = this.state;
         return (
@@ -235,6 +251,7 @@ export default class SortingAnimator extends Component {
                     <button className="header-button" onClick={() => this.selectionSort()}>Selection Sort</button>
                     <button className="header-button" onClick={() => this.mergeSort()}>Merge Sort</button>
                     <button className="header-button" onClick={() => this.heapSort()}>Heap Sort</button>
+                    <button className="header-button" onClick={() => this.quickSort()}>Quick Sort</button>
                 </div>
                 <div className="graph-container">
                     {array.map((value, index) => (
