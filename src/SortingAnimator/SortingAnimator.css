@@ -1,13 +1,22 @@
 .array-container{
     background-color: rgb(168, 250, 246);
     position: absolute;
-    height: 100%;
-    width: 100%;
+    padding: 20px;
+    /* height: 100%;
+    width: 100%; */
+}
+
+.graph-container{
+    margin: 15px;
+    display: grid;
+    grid-template-columns: repeat(100, 1fr);
+    grid-column-gap: .4%;
+    align-items: baseline;
 }
 
 .array-bar{
-    margin: 15px 4px;
-    width: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     background-color: rgb(38, 0, 255);
     display: inline-block;
 }
@@ -15,13 +24,17 @@
 .header-button{
     position: relative;
     background-color: rgb(251, 255, 0);
-    width: 150px;
-    height: 60px;
+    height: 70px;
     font-size: large;
-    margin: 5px 10px;
+    margin: 15px;
+    padding: 10px;
 }
 
 .button-container{
-    margin-top: 15px;
-    margin-bottom: 10px;
+    /* margin-top: 15px;
+    margin-bottom: 10px; */
+    margin: 15px 10px;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-column-gap: .2%;
 }
