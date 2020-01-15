@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './SortingAnimator.css';
-import { randomIntFromInterval, mergesort, Speed, heapify, swap, quicksort, sortingCompleted } from './HelperFunctions';
+import { randomIntFromInterval, mergesort, heapify, swap, quicksort, sortingCompleted } from './HelperFunctions';
+import { Speed, maxHeight, arraySize } from './Constants';
 /*import { render } from '@testing-library/react';*/
+import Slider from '@material-ui/core/Slider';
 
 export default class SortingAnimator extends Component {
     constructor(props) {
@@ -11,22 +13,41 @@ export default class SortingAnimator extends Component {
             sorting_in_progress: false,
             SPEED_MS: Speed,
             array_sorted: true,
+            maxHeight: maxHeight,
+            arraySize: arraySize,
         };
         this.complete = this.complete.bind(this);
+        this.handleMaxHeight = this.handleMaxHeight.bind(this);
+        this.handleSpeed = this.handleSpeed.bind(this);
     }
 
     componentDidMount() {
         this.reset();
     }
 
+    handleMaxHeight(event, value) {
+        this.setState({
+            maxHeight: value,
+        });
+        this.reset();
+    }
+
+    handleSpeed(event, value) {
+        this.setState({
+            SPEED_MS: value,
+        });
+        this.reset();
+    }
+
     reset() {
         if (this.state.sorting_in_progress) {
-            alert("Sorting in Progress");
+            //alert("Sorting in Progress");
             return;
         }
         const array = [];
-        for (let i = 0; i < 100; i++) {
-            array.push(randomIntFromInterval(10, 500));
+        const { maxHeight, arraySize } = this.state;
+        for (let i = 0; i < arraySize; i++) {
+            array.push(randomIntFromInterval(10, maxHeight));
         }
         this.setState({ array, array_sorted: false });
     }
@@ -254,6 +275,16 @@ export default class SortingAnimator extends Component {
                     <button className="header-button" onClick={() => this.mergeSort()}>Merge Sort</button>
                     <button className="header-button" onClick={() => this.heapSort()}>Heap Sort</button>
                     <button className="header-button" onClick={() => this.quickSort()}>Quick Sort</button>
+                    <button className="header-button">
+                        ArrayHeight:
+                        <Slider valueLabelDisplay="auto" defaultValue={this.state.maxHeight} onChange={this.handleMaxHeight} aria-labelledby="continuous-slider" min={100}
+                            max={600} />
+                    </button>
+                    <button className="header-button">
+                        Speed(ms):
+                        <Slider valueLabelDisplay="auto" defaultValue={this.state.SPEED_MS} onChange={this.handleSpeed} aria-labelledby="continuous-slider" min={10}
+                            max={200} />
+                    </button>
                 </div>
                 <div className="graph-container">
                     {array.map((value, index) => (

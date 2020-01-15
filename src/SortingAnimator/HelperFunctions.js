@@ -1,4 +1,3 @@
-var Speed = 50;
 function randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -181,7 +180,6 @@ export {
     sortingCompleted,
     mergesort,
     merge,
-    Speed,
     heapify,
     swap,
     quicksort,
