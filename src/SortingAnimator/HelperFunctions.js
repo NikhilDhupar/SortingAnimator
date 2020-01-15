@@ -4,10 +4,19 @@ function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function sortingCompleted(length, arrayBars) {
+let sortingCompleted = async (arrayBars) => {
+    let length = arrayBars.length;
     for (let x = 0; x < length; x++) {
-        arrayBars[x].style.backgroundColor = 'purple';
+        arrayBars[x].style.backgroundColor = 'green';
     }
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            for (let x = 0; x < length; x++) {
+                arrayBars[x].style.backgroundColor = 'blue';
+            }
+            resolve();
+        }, 1000);
+    })
 }
 
 function animate_mergesort(res, arrayBars, callback, row, col, SPEED_MS) {
@@ -126,10 +135,10 @@ let quicksort = (array, low, high, arrayBars, SPEED_MS) => {
     return new Promise(async (resolve, reject) => {
         if (low < high) {
             await partition(array, low, high, arrayBars, SPEED_MS)
-            .then(async (p)=>{
-                await quicksort(array, low, p - 1, arrayBars, SPEED_MS);
-                await quicksort(array, p + 1, high, arrayBars, SPEED_MS);
-            })
+                .then(async (p) => {
+                    await quicksort(array, low, p - 1, arrayBars, SPEED_MS);
+                    await quicksort(array, p + 1, high, arrayBars, SPEED_MS);
+                })
         }
         resolve();
     });
