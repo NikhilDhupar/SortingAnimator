@@ -121,6 +121,35 @@ let heapify = (array, curr_index, l, arrayBars, SPEED_MS) => {
         resolve("done");
     });
 }
+
+let quicksort = (array, low, high, arrayBars, SPEED_MS) => {
+    return new Promise(async (resolve, reject) => {
+        if (low < high) {
+            await partition(array, low, high, arrayBars, SPEED_MS)
+            .then(async (p)=>{
+                await quicksort(array, low, p - 1, arrayBars, SPEED_MS);
+                await quicksort(array, p + 1, high, arrayBars, SPEED_MS);
+            })
+        }
+        resolve();
+    });
+}
+
+let partition = async (array, low, high, arrayBars, SPEED_MS) => {
+    return new Promise(async (resolve, reject) => {
+        let pivot = array[high];
+        let i = (low - 1)
+        for (let j = low; j <= high - 1; j++) {
+            if (array[j] < pivot) {
+                i++;
+                await swap(array, i, j, arrayBars, SPEED_MS);
+            }
+        }
+        await swap(array, i + 1, high, arrayBars, SPEED_MS);
+        resolve(i + 1);
+    });
+}
+
 let swap = (array, left, right, arrayBars, SPEED_MS) => {
     return new Promise((resolve, reject) => {
         arrayBars[left].style.backgroundColor = "red";
@@ -146,4 +175,5 @@ export {
     Speed,
     heapify,
     swap,
+    quicksort,
 }
