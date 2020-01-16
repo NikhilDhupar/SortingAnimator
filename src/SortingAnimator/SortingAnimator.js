@@ -11,7 +11,7 @@ export default class SortingAnimator extends Component {
         this.state = {
             array: [],
             sorting_in_progress: false,
-            SPEED_MS: Speed,
+            SPEED_MS: 200- Speed,
             array_sorted: true,
             maxHeight: maxHeight,
             arraySize: arraySize,
@@ -34,7 +34,7 @@ export default class SortingAnimator extends Component {
 
     handleSpeed(event, value) {
         this.setState({
-            SPEED_MS: value,
+            SPEED_MS: 200-value,
         });
         this.reset();
     }
@@ -282,7 +282,7 @@ export default class SortingAnimator extends Component {
                     </button>
                     <button className="header-button">
                         Speed(ms):
-                        <Slider valueLabelDisplay="auto" defaultValue={this.state.SPEED_MS} onChange={this.handleSpeed} aria-labelledby="continuous-slider" min={10}
+                        <Slider valueLabelDisplay="auto" defaultValue={this.state.SPEED_MS} onChange={this.handleSpeed} aria-labelledby="continuous-slider" min={1}
                             max={200} />
                     </button>
                 </div>
